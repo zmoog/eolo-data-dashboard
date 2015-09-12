@@ -1,13 +1,5 @@
 (function() {
 
-
-	function bytesToSize (bytes) {
-	  var sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-	  if (bytes == 0) return 'n/a';
-	  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-	  return ((i == 0)? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
-	};
-
 	angular.module('eolo')
 		.controller('DashboardCtrl', ['QuotaService', '$log', function(QuotaService, $log){
 			
@@ -15,16 +7,10 @@
 
 			var quota = QuotaService.get().then(function(response) {
 
-				$log.info(response.data);
-
 				self.quota = response.data;
 
-				self.percentage = self.quota.data.used / self.quota.data.quota * 100.0; 
-
-
-				self.nextReset = new Date(Date.parse(self.quota.data.nextReset));
-
-				$log.info(self.quota.data.nextReset, self.nextReset, self.nextReset.toString());
+				self.dateNextReset = moment(self.quota.data.nextReset, 'YYYY-MM-DD HH:mm:ss');
+				// $log.info(self.quota.data.nextReset, self.dateNextReset, self.dateNextReset.toString());
 
 
 			   	$('#chart-container').highcharts({
